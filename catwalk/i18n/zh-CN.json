@@ -1,18 +1,18 @@
 {
-  "tooltip": {
-    "running": "猫在奔跑",
-    "sleeping": "猫在睡觉"
+  "panel": {
+    "cpuLabel": "CPU：{usage}%",
+    "title": "猫步"
   },
   "settings": {
-    "title": "Catwalk 设置",
+    "currentThreshold": "当前阈值：{value}%",
     "minimumThreshold": {
-      "label": "最小 CPU 阈值",
-      "description": "CPU 使用率必须高于此百分比才能让猫开始奔跑"
+      "description": "CPU 使用率必须高于此百分比，猫才能开始跑动。",
+      "label": "最低CPU阈值"
     },
-    "currentThreshold": "当前阈值: {value}%"
+    "title": "时装秀场布置"
   },
-  "panel": {
-    "title": "Catwalk",
-    "cpuLabel": "CPU: {usage}%"
+  "tooltip": {
+    "running": "猫在跑",
+    "sleeping": "猫在睡觉"
   }
 }

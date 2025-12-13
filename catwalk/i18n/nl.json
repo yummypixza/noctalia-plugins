@@ -1,18 +1,18 @@
 {
-  "tooltip": {
-    "running": "Kat loopt",
-    "sleeping": "Kat slaapt"
+  "panel": {
+    "cpuLabel": "CPU: {usage}%",
+    "title": "Catwalk"
   },
   "settings": {
-    "title": "Catwalk Instellingen",
+    "currentThreshold": "Huidige drempelwaarde: {value}%",
     "minimumThreshold": {
-      "label": "Minimale CPU Drempel",
-      "description": "CPU-gebruik moet boven dit percentage liggen om de kat te laten lopen"
+      "description": "CPU-gebruik moet boven dit percentage liggen voordat de kat begint te rennen.",
+      "label": "Minimale CPU-drempel"
     },
-    "currentThreshold": "Huidige drempel: {value}%"
+    "title": "Catwalk Instellingen"
   },
-  "panel": {
-    "title": "Catwalk",
-    "cpuLabel": "CPU: {usage}%"
+  "tooltip": {
+    "running": "Kat rent",
+    "sleeping": "Kat slaapt"
   }
 }

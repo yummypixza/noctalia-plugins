@@ -1,18 +1,18 @@
 {
-  "tooltip": {
-    "running": "Kedi koşuyor",
-    "sleeping": "Kedi uyuyor"
+  "panel": {
+    "cpuLabel": "CPU: {usage}%",
+    "title": "Podyum"
   },
   "settings": {
-    "title": "Catwalk Ayarları",
+    "currentThreshold": "Mevcut eşik: {value}%",
     "minimumThreshold": {
-      "label": "Minimum CPU Eşiği",
-      "description": "Kedinin koşmaya başlaması için CPU kullanımı bu yüzdeden yüksek olmalı"
+      "description": "CPU kullanımı, kedinin koşmaya başlaması için bu yüzdeden yüksek olmalıdır.",
+      "label": "Minimum CPU Eşiği"
     },
-    "currentThreshold": "Mevcut eşik: {value}%"
+    "title": "Podyum Ayarları"
   },
-  "panel": {
-    "title": "Catwalk",
-    "cpuLabel": "CPU: {usage}%"
+  "tooltip": {
+    "running": "Kedi koşuyor.",
+    "sleeping": "Kedi uyuyor."
   }
 }

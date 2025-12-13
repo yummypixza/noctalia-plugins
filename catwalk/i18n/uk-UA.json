@@ -1,18 +1,18 @@
 {
-  "tooltip": {
-    "running": "Кіт бігає",
-    "sleeping": "Кіт спить"
+  "panel": {
+    "cpuLabel": "ЦП: {usage}%",
+    "title": "Подіум"
   },
   "settings": {
-    "title": "Налаштування Catwalk",
+    "currentThreshold": "Поточний поріг: {value}%",
     "minimumThreshold": {
-      "label": "Мінімальний поріг CPU",
-      "description": "Використання CPU має бути вище цього відсотка, щоб кіт почав бігати"
+      "description": "Використання ЦП має бути вище цього відсотка, щоб кіт почав бігати.",
+      "label": "Мінімальний поріг ЦП"
     },
-    "currentThreshold": "Поточний поріг: {value}%"
+    "title": "Налаштування подіуму"
   },
-  "panel": {
-    "title": "Catwalk",
-    "cpuLabel": "CPU: {usage}%"
+  "tooltip": {
+    "running": "Кіт біжить",
+    "sleeping": "Кіт спить"
   }
 }
