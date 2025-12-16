@@ -14,38 +14,22 @@ Rectangle {
     property string widgetId: ""
     property string section: ""
 
+    property bool hovered: false
     property int updateInterval: pluginApi?.pluginSettings.updateInterval || pluginApi?.manifest?.metadata.defaultSettings?.updateInterval
     property string configuredTerminal: pluginApi?.pluginSettings.configuredTerminal || pluginApi?.manifest?.metadata.defaultSettings?.configuredTerminal
     property int count: checkForUpdates() || 0
-    property bool isVisible: root.count > 0 || true
     property bool hideOnZero: pluginApi?.pluginSettings.hideOnZero || pluginApi?.manifest?.metadata.defaultSettings?.hideOnZero
 
     readonly property string barPosition: Settings.data.bar.position
     readonly property bool isVertical: barPosition === "left" || barPosition === "right"
     readonly property string updateScriptDir: (pluginApi?.pluginDir || Settings.configDir + "/plugins/update-count") + "/scripts"
 
-    implicitWidth: isVertical ? Style.capsuleHeight : layout.implicitWidth + Style.marginM * 2
-    implicitHeight: isVertical ? layout.implicitHeight + Style.marginM * 2 : Style.capsuleHeight
+    implicitWidth: isVertical ? Style.capsuleHeight : layout.implicitWidth + Style.marginS * 2
+    implicitHeight: isVertical ? layout.implicitHeight + Style.marginS * 2 : Style.capsuleHeight
 
-    color: Style.capsuleColor
+    color: root.hovered ? Color.mHover : Style.capsuleColor
     radius: Style.radiusM
-
-    function hiddenWidgetMode() {
-        if (root.hideOnZero) {
-            if (root.isVertical && root.count === 0) {
-                root.visible = false;
-            }
-            if (!root.isVertical && root.count === 0) {
-                root.visible = false;
-            }
-            if (root.isVertical && root.count > 0) {
-                root.visible = true;
-            }
-            if (!root.isVertical && root.count > 0) {
-                root.visible = true;
-            }
-        }
-    }
+    visible: (root.count > 0) || !root.hideOnZero
 
     function checkForUpdates() {
         updateDataHandler.running = true;
@@ -57,9 +41,9 @@ Rectangle {
 
     function buildTooltip() {
         if (root.count == 0) {
-            TooltipService.show(root, "No updates available", BarService.getTooltipDirection());
+            TooltipService.show(root, pluginApi?.tr("tooltip.no-update"), BarService.getTooltipDirection());
         } else {
-            TooltipService.show(root, "Click to update your system", BarService.getTooltipDirection());
+            TooltipService.show(root, pluginApi?.tr("tooltip.available-update"), BarService.getTooltipDirection());
         }
     }
 
@@ -83,10 +67,7 @@ Rectangle {
         interval: root.updateInterval
         running: true
         repeat: true
-        onTriggered: {
-            root.checkForUpdates();
-            root.hiddenWidgetMode();
-        }
+        onTriggered: root.checkForUpdates()
     }
 
     Item {
@@ -102,12 +83,12 @@ Rectangle {
 
             NIcon {
                 icon: pluginApi?.pluginSettings?.configuredIcon || pluginApi?.manifest?.metadata?.defaultSettings?.configuredIcon
-                color: Settings.data.colorSchemes.darkMode ? Color.mOnSurface : Color.mOnPrimary
+                color: root.hovered ? Color.mOnHover : Color.mOnSurface
             }
 
             NText {
                 text: root.count.toString()
-                color: Settings.data.colorSchemes.darkMode ? Color.mOnSurface : Color.mOnPrimary
+                color: root.hovered ? Color.mOnHover : Color.mOnSurface
                 pointSize: Style.fontSizeS
             }
         }
@@ -120,13 +101,13 @@ Rectangle {
             NIcon {
                 Layout.alignment: Qt.AlignHCenter
                 icon: pluginApi?.pluginSettings?.configuredIcon || pluginApi?.manifest?.metadata?.defaultSettings?.configuredIcon
-                color: Settings.data.colorSchemes.darkMode ? Color.mOnSurface : Color.mOnPrimary
+                color: root.hovered ? Color.mOnHover : Color.mOnSurface
             }
 
             NText {
                 Layout.alignment: Qt.AlignHCenter
                 text: root.count.toString()
-                color: Settings.data.colorSchemes.darkMode ? Color.mOnSurface : Color.mOnPrimary
+                color: root.hovered ? Color.mOnHover : Color.mOnSurface
                 pointSize: Style.fontSizeS
             }
         }
@@ -141,12 +122,12 @@ Rectangle {
             }
 
             onEntered: {
-                root.color = Qt.lighter(Style.capsuleColor, 1.1);
+                root.hovered = true;
                 buildTooltip();
             }
 
             onExited: {
-                root.color = Style.capsuleColor;
+                root.hovered = false;
                 TooltipService.hide();
             }
         }
