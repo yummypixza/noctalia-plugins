@@ -79,6 +79,17 @@
       "lastUpdated": "2025-12-26T23:47:22+01:00"
     },
     {
+      "id": "noctalia-supergfxctl",
+      "name": "SuperGFX Control",
+      "version": "0.0.1",
+      "author": "cod3d <cod3ddot@proton.me>",
+      "description": "GPU control with supergfxctl for noctalia.",
+      "repository": "https://github.com/cod3ddot/noctalia-supergfxctl",
+      "minNoctaliaVersion": "3.7.5",
+      "license": "AGPL-3.0-or-later",
+      "lastUpdated": "2025-12-28T14:49:30-08:00"
+    },
+    {
       "id": "privacy-indicator",
       "name": "Privacy Indicator",
       "version": "1.0.10",
