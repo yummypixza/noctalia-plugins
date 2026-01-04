@@ -3,7 +3,7 @@
   "name": "Currency Converter",
   "version": "1.0.0",
   "minNoctaliaVersion": "3.6.0",
-  "author": "Noctalia Community",
+  "author": "Lokize",
   "license": "MIT",
   "repository": "https://github.com/noctalia-dev/noctalia-plugins",
   "description": "Real-time currency converter widget with support for multiple currencies",
