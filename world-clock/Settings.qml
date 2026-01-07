@@ -15,22 +15,40 @@ ColumnLayout {
   property var cfg: pluginApi?.pluginSettings || ({})
   property var defaults: pluginApi?.manifest?.metadata?.defaultSettings || ({})
 
-  property var timezones: cfg.timezones || defaults.timezones || []
+  property var timezones: cfg.timezones ?? defaults.timezones ?? []
   property int rotationInterval: (cfg.rotationInterval ?? defaults.rotationInterval ?? 5000) / 1000
-  property string timeFormat: cfg.timeFormat || defaults.timeFormat || "HH:mm"
+  property string timeFormat: cfg.timeFormat ?? defaults.timeFormat ?? "HH:mm"
 
+  Component.onCompleted: {
+    if (pluginApi) {
+      Logger.i("WorldClock", "Settings initialized");
+    }
+  }
+
+  // This function is called by the dialog to save settings
   function saveSettings() {
     if (!pluginApi) {
-      console.error("World Clock: Cannot save settings - pluginApi is null");
+      Logger.e("WorldClock", "Cannot save settings: pluginApi is null");
       return;
     }
-    
+
+    // Update the plugin settings object
     pluginApi.pluginSettings.timezones = timezones;
     pluginApi.pluginSettings.rotationInterval = rotationInterval * 1000;
     pluginApi.pluginSettings.timeFormat = timeFormat;
-    
+
+    // Save to disk
     pluginApi.saveSettings();
-    console.log("World Clock: Settings saved successfully");
+
+    Logger.i("WorldClock", "Settings saved successfully");
+  }
+
+  function updateTimezones(newTimezones) {
+    timezones = newTimezones;
+    if (pluginApi) {
+      pluginApi.pluginSettings.timezones = newTimezones;
+      pluginApi.saveSettings();
+    }
   }
 
   // Popular timezones list
@@ -78,12 +96,6 @@ ColumnLayout {
     { name: pluginApi?.tr("city.lagos"), timezone: "Africa/Lagos", region: "Africa" },
     { name: pluginApi?.tr("city.nairobi"), timezone: "Africa/Nairobi", region: "Africa" }
   ]
-
-  Component.onCompleted: {
-    if (pluginApi) {
-      Logger.i("WorldClock", "Settings initialized");
-    }
-  }
 
   // Header
   RowLayout {
@@ -144,7 +156,10 @@ ColumnLayout {
         suffix: " s"
         onValueChanged: {
           root.rotationInterval = value;
-          saveSettings();
+          if (pluginApi) {
+            pluginApi.pluginSettings.rotationInterval = value * 1000;
+            pluginApi.saveSettings();
+          }
         }
       }
     }
@@ -172,7 +187,10 @@ ColumnLayout {
         currentKey: root.timeFormat
         onSelected: key => {
           root.timeFormat = key;
-          saveSettings();
+          if (pluginApi) {
+            pluginApi.pluginSettings.timeFormat = key;
+            pluginApi.saveSettings();
+          }
         }
       }
     }
@@ -215,7 +233,10 @@ ColumnLayout {
             enabled: true
           });
           root.timezones = newTimezones;
-          saveSettings();
+          if (pluginApi) {
+            pluginApi.pluginSettings.timezones = newTimezones;
+            pluginApi.saveSettings();
+          }
         }
       }
     }
@@ -229,6 +250,9 @@ ColumnLayout {
         model: root.timezones
 
         delegate: Rectangle {
+          required property int index
+          required property var modelData
+          
           Layout.fillWidth: true
           Layout.preferredHeight: timezoneContent.implicitHeight + Style.marginS * 2
           color: modelData.enabled ? Color.mSurface : Color.mSurfaceVariant
@@ -247,10 +271,9 @@ ColumnLayout {
               Layout.alignment: Qt.AlignVCenter
               checked: modelData.enabled
               onToggled: checked => {
-                let tzs = root.timezones.slice();
+                var tzs = root.timezones.slice();
                 tzs[index].enabled = checked;
-                root.timezones = tzs;
-                saveSettings();
+                root.updateTimezones(tzs);
               }
             }
 
@@ -260,12 +283,12 @@ ColumnLayout {
               Layout.alignment: Qt.AlignVCenter
               
               property var comboModel: {
-                let model = [];
-                for (let i = 0; i < root.availableTimezones.length; i++) {
-                  let tz = root.availableTimezones[i];
+                var model = [];
+                for (var i = 0; i < root.availableTimezones.length; i++) {
+                  var tz = root.availableTimezones[i];
                   model.push({
                     "key": i.toString(),
-                    "name": `${tz.name} (${tz.timezone})`
+                    "name": tz.name + " (" + tz.timezone + ")"
                   });
                 }
                 return model;
@@ -275,7 +298,7 @@ ColumnLayout {
               
               // Find current timezone in the list
               currentKey: {
-                for (let i = 0; i < root.availableTimezones.length; i++) {
+                for (var i = 0; i < root.availableTimezones.length; i++) {
                   if (root.availableTimezones[i].timezone === modelData.timezone) {
                     return i.toString();
                   }
@@ -284,14 +307,13 @@ ColumnLayout {
               }
               
               onSelected: key => {
-                let selectedIndex = parseInt(key);
-                let selectedTz = root.availableTimezones[selectedIndex];
+                var selectedIndex = parseInt(key);
+                var selectedTz = root.availableTimezones[selectedIndex];
                 
-                let tzs = root.timezones.slice();
+                var tzs = root.timezones.slice();
                 tzs[index].name = selectedTz.name;
                 tzs[index].timezone = selectedTz.timezone;
-                root.timezones = tzs;
-                saveSettings();
+                root.updateTimezones(tzs);
               }
             }
 
@@ -300,10 +322,9 @@ ColumnLayout {
               Layout.alignment: Qt.AlignVCenter
               icon: "trash"
               onClicked: {
-                let tzs = root.timezones.slice();
+                var tzs = root.timezones.slice();
                 tzs.splice(index, 1);
-                root.timezones = tzs;
-                saveSettings();
+                root.updateTimezones(tzs);
               }
             }
           }
