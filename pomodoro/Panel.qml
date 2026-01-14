@@ -20,10 +20,20 @@ Item {
 
   readonly property bool compactMode: mainInstance ? mainInstance.compactMode : false
   
-  property real contentPreferredWidth: (compactMode ? 340 : 380) * Style.uiScaleRatio
-  property real contentPreferredHeight: (compactMode ? 240 : 360) * Style.uiScaleRatio
+  property bool panelReady: false
+  
+  property real contentPreferredWidth: panelReady ? ((compactMode ? 340 : 380) * Style.uiScaleRatio) : 0
+  property real contentPreferredHeight: panelReady ? ((compactMode ? 240 : 360) * Style.uiScaleRatio) : 0
 
   anchors.fill: parent
+  
+  Component.onCompleted: {
+    panelReady = true
+  }
+  
+  Component.onDestruction: {
+    panelReady = false
+  }
   
   readonly property bool isRunning: mainInstance ? mainInstance.pomodoroRunning : false
   readonly property int currentMode: mainInstance ? mainInstance.pomodoroMode : modeWork
@@ -77,6 +87,7 @@ Item {
     id: panelContainer
     anchors.fill: parent
     color: "transparent"
+    visible: root.panelReady
 
     ColumnLayout {
       anchors {
